@@ -1,0 +1,30 @@
+:root {
+  --border: 1px solid #90919152;
+  --color-primary: #0859bc;
+  --color-secondary: #909191;
+  --color-accent: #154b67;
+  --color-bg-light: #f5fcff;
+  --color-personal-lbl: #0e8b3e;
+  --bg-personal-lbl: #0e8b3e4b;
+  --color-project-lbl: #d6af15;
+  --bg-project-lbl: #c9c3094f;
+  --font-main: "DM Sans", sans-serif;
+  --btn-padding: 0.75rem 1rem;
+  --btn-radius: 0.625rem;
+}
+
+body {
+  font-family: var(--font-main);
+  height: 100vh;
+}
+
+h1 {
+  margin: 0 6.25rem 0 1rem;
+  color: var(--color-accent);
+  font-size: 1.875rem;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
