@@ -9,15 +9,13 @@ import OverlayBadge from "primevue/overlaybadge";
 import MyDropdown from "./MyDropdown.vue";
 // Importamos nuestro componente personalizado de menú desplegable
 
-import gmailPfp from "../assets/images/gmail-pfp.png";
-// Importamos la imagen de perfil desde la carpeta assets
 
 // Variable reactiva que indica si la pantalla es "móvil" (≤1080px)
-const isMobile = ref(window.innerWidth <= 1080);
+const isLaptop = ref(window.innerWidth <= 1080);
 
 // Función que actualiza la variable cuando cambia el tamaño de la ventana
 function handleResize() {
-  isMobile.value = window.innerWidth <= 1080;
+  isLaptop.value = window.innerWidth <= 1080;
 }
 
 // Al montar el componente, añadimos el listener de resize
@@ -31,7 +29,7 @@ onUnmounted(() => window.removeEventListener("resize", handleResize));
     <!-- Foto de perfil con badge de estado -->
     <div class="profile-picture">
       <OverlayBadge severity="success" class="inline-flex custom-badge">
-        <Avatar :image="gmailPfp" class="mr-2" size="large" shape="circle" />
+        <Avatar label="EH" class="mr-2" size="large" style="background-color: #D6AF15; color: #fff" shape="circle" />
       </OverlayBadge>
     </div>
 
@@ -42,7 +40,7 @@ onUnmounted(() => window.removeEventListener("resize", handleResize));
     </div>
 
     <!-- Condicional: si es móvil, se muestra el dropdown -->
-    <MyDropdown v-if="isMobile" />
+    <MyDropdown v-if="isLaptop" />
 
     <!-- Si NO es móvil, se muestra solo el icono caret -->
     <i v-else class="fa-solid fa-caret-down text-secondary"></i>
@@ -51,6 +49,12 @@ onUnmounted(() => window.removeEventListener("resize", handleResize));
 </template>
 
 <style scoped>
+.user-profile {
+  border-left: var(--border);
+  padding: 0 1rem;
+  height: 100%;
+}
+
 /* Ajustes al badge del avatar */
 :deep(.custom-badge .p-badge) {
   transform: none;
@@ -63,6 +67,7 @@ onUnmounted(() => window.removeEventListener("resize", handleResize));
   font-size: 0.925rem;
   margin: 0 0.625rem;
 }
+
 .name {
   font-weight: bold;
   color: var(--color-accent);
@@ -72,5 +77,16 @@ onUnmounted(() => window.removeEventListener("resize", handleResize));
 /* Color del icono caret */
 .fa-caret-down {
   color: var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+  .user-name {
+    display: none;
+
+  }
+
+  .user-profile {
+    padding: 0.75rem;
+  }
 }
 </style>

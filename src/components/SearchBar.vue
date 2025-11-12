@@ -1,40 +1,44 @@
-<script setup></script>
+<script setup>
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import InputText from 'primevue/inputtext';
+</script>
 
 <template>
-  <div class="search-tool">
-    <i class="pi pi-search"></i>
-    <input type="text" v-model="input" placeholder="Search for anything..." />
+  <div class="search-tool flex">
+    <IconField>
+      <InputIcon class="pi pi-search"/>
+      <InputText v-model="value1" placeholder="Search for anything..." size="large" />
+    </IconField>
   </div>
 </template>
 
 <style scoped>
-div {
-  display: flex;
-}
 
-input:focus {
+.p-inputtext.p-component {
+  background-color: white;
   outline: none;
-}
-
-input::placeholder {
-  opacity: 1;
+  border: none;
+  box-shadow: none;
   color: var(--color-secondary);
-}
-
-.pi {
-  color: var(--color-secondary);
-  font-size: 1.5rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
 }
 
-input {
-  border: none;
-  font-size: 1.125rem;
-  margin-left: 1rem;
-  color: #575757;
-  width: 100%;
-  background-color: white;
+.pi-search {
+  font-weight: bold;
+  font-size: 1.250rem !important;
+  color: var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+  .pi-search {
+    font-size: 1.250rem;
+  }
+
+  input {
+    margin-left: 0.250rem;
+    font-size: 1.125rem;
+  }
 }
 </style>
