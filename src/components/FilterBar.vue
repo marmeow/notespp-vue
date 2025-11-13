@@ -43,12 +43,12 @@ const sortOptions = ref([
 }
 
 
+:deep( .p-select-label ) {
+  color: var(--color-accent)!important;
+}
+
 
 .p-select-label.p-placeholder span {
         color: var(--color-accent);
-}
-
-.p-select-label.p-placeholder {
-  color: var(--color-accent);
 }
 </style>

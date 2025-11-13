@@ -1,6 +1,32 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import MyButton from './MyButton.vue';
 import FilterBar from './FilterBar.vue';
+import MySelectButton from './MySelectButton.vue';
+import MyScroller from './MyScroller.vue';
+
+
+
+// ref reactiu per guardar les notes
+const notes = ref({});
+
+async function fetchNotes() {
+  try {
+    const res = await fetch("http://localhost:8002/notes");
+    const data = await res.json();
+
+
+    notes.value = data; // guardem les notes tal com venen del backend
+
+  } catch (error) {
+    console.error("Error en carregar les notes: ", error);
+  }
+}
+
+// quan el component es munta, carreguem les notes
+onMounted(() => {
+  fetchNotes();
+});
 
 
 //VIRTUAL SCROLL 
@@ -20,17 +46,11 @@ import FilterBar from './FilterBar.vue';
 
         <div class="notes-info flex">
             <p><span class="num-notes">0</span> Notes</p>
-            <FilterBar/>
-            
+            <FilterBar />
+
         </div>
-
-
-        <div class="notes-categories flex">
-            <p class="all">All</p>
-            <p class="reminder">Reminder</p>
-        </div>
-
-
+        <MySelectButton />
+       <MyScroller :notes="notes" />
     </section>
 
 </template>
@@ -45,7 +65,7 @@ import FilterBar from './FilterBar.vue';
     max-width: 100%;
     height: 100%;
     color: black;
-    background-color: rgba(128, 128, 128, 0.267);
+
 }
 
 
@@ -69,11 +89,6 @@ h2 {
     margin: 0;
 }
 
-
-.sort-date {
-    gap: 0.625rem;
-}
-
 .notes-info {
     justify-content: space-around;
     font-weight: 600;
@@ -87,37 +102,6 @@ h2 {
 
 .num-notes {
     color: var(--color-accent);
-}
-
-.num-notes {
     font-weight: bold;
 }
-
-.notes-categories {
-    justify-content: center;
-    align-items: flex-end;
-    border-bottom: var(--border);
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-secondary);
-    text-align: center;
-    padding: 1.25rem 1.25rem 0px 1.25rem;
-    cursor: pointer;
-}
-
-.all {
-    color: var(--color-primary);
-    border-bottom: 3px solid var(--color-primary);
-    width: 50%;
-    padding-bottom: 0.75rem;
-    font-weight: bold;
-}
-
-.reminder {
-    width: 50%;
-    padding-bottom: 0.75rem;
-    border-bottom: 3px solid transparent;
-}
-
-
 </style>
