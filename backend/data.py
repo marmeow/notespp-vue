@@ -75,7 +75,7 @@ note_dict: dict[int, Nota] = {
     ),
     3: Nota(
         titol="Weekly Team Update",
-        contingut="Document this week's accomplishments, challenges . . . .Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue ante. Integer hendrerit aliquam arcu at laoreet. Duis ac volutpat mi, porta laoreet lorem. Mauris et maximus nibh.",  # noqa: E501
+        contingut="Document this week's accomplishments, challenges Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue ante. Integer hendrerit aliquam arcu at laoreet. Duis ac volutpat mi, porta laoreet lorem. Mauris et maximus nibh.",  # noqa: E501
         link="https://www.google.com/",
         tasks=deepcopy(task_dict),
         tasks_id=[],

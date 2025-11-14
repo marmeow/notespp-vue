@@ -3,6 +3,7 @@ import MyHeader from "./components/MyHeader.vue";
 import FirstSidebar from "./components/FirstSidebar.vue";
 import SecondSidebar from "./components/SecondSidebar.vue";
 import NoteList from "./components/NoteList.vue";
+import NotePanel from "./components/NotePanel.vue";
 </script>
 
 <template>
@@ -13,9 +14,7 @@ import NoteList from "./components/NoteList.vue";
     <FirstSidebar />
     <SecondSidebar />
     <NoteList/>
-    <div class="notepanel">
-      <p>AAAAAeowef</p>
-    </div>
+    <NotePanel/>
   </div>
 </template>
 

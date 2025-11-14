@@ -1,31 +1,45 @@
 <script setup>
 import MyNote from './MyNote.vue';
 
-// rebem les notes com a prop del component pare
-// IMPORTANT: afegim un valor per defecte {} per evitar errors
+
 const props = defineProps({
   notes: {
     type: Object,
-    default: () => ({}) // objecte buit per defecte
+    default: () => ({}) 
   }
+
 });
+
+// https://www.youtube.com/watch?v=Wz9mPaprSVw
+const emit = defineEmits(['update:notes']);
+
+const deleteNote = (noteId) => {
+  const notesActualitzades = Object.fromEntries(
+    Object.entries(props.notes).filter(([id]) => id !== noteId)
+  );
+    console.log(notesActualitzades);
+  emit('update:notes', notesActualitzades); 
+}
+
+
 </script>
 
 <template>
   <div class="llista-notes">
-    <!-- v-for amb Object.entries() per iterar sobre un objecte -->
-    <!-- [noteId, nota] és la destructuració de cada entrada [clau, valor] -->
+     <!-- Objecte notes a array k v, l bule es para ya enviar nota pot nota en lugar de todo un objeto de muchas notas  -->
     <MyNote 
       v-for="[noteId, nota] in Object.entries(notes)" 
       :key="noteId"
       :note-id="noteId"
       :nota="nota"
+      @onDeleteClicked="deleteNote"
     />
   </div>
 </template>
 
 <style scoped>
 .llista-notes {
+  height: 100%;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;

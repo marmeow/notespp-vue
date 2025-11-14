@@ -7,6 +7,7 @@ import MyScroller from './MyScroller.vue';
 
 
 
+
 // ref reactiu per guardar les notes
 const notes = ref({});
 
@@ -29,14 +30,15 @@ onMounted(() => {
 });
 
 
+
+
+
 //VIRTUAL SCROLL 
 </script>
 
 
 <template>
-
     <section id="note-list">
-
         <div class="new-note flex">
             <h2>Notes</h2>
             <MyButton bg="white" color="var(--color-primary)" border="var(--border)" width="fit-content"><i
@@ -50,7 +52,9 @@ onMounted(() => {
 
         </div>
         <MySelectButton />
-       <MyScroller :notes="notes" />
+
+        <!--al haber un v-model eso indica que el hijo DEBE devolver algo (ya que las props son solo de lectura), en este caso las nnotas actualizadas que se actualizan cada vez que se hace click en la basura-->
+       <MyScroller v-model:notes="notes" />
     </section>
 
 </template>
@@ -65,6 +69,7 @@ onMounted(() => {
     max-width: 100%;
     height: 100%;
     color: black;
+    height: 100%;
 
 }
 

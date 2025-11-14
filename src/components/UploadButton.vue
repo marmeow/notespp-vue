@@ -32,7 +32,7 @@ const triggerFileSelect = () => {
       <slot>Upload</slot>
     </MyButton>
     
-    <!-- FileUpload oculto -->
+
     <FileUpload
       ref="fileUploadRef"
       mode="basic"
