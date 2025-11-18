@@ -1,0 +1,28 @@
+{
+    "name": "Python 3",
+    "image": "mcr.microsoft.com/devcontainers/python:2-3.12-bullseye",
+    "features": {
+        "ghcr.io/devcontainers-extra/features/vue-cli:2": {},
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "20"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Vue.volar",
+                "charliermarsh.ruff",
+                "dbaeumer.vscode-eslint",
+                "ritwickdey.LiveServer",
+                "usernamehw.errorlens",
+                "mcright.auto-save",
+                "exer7um.vue-3-vscode-snippets"
+            ]
+        }
+    },
+    "forwardPorts": [
+        8000,
+        5173
+    ],
+    "postCreateCommand": "pip3 install --user -r requirements.txt"
+}
