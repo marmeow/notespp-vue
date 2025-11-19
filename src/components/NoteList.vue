@@ -1,62 +1,37 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import MyButton from './MyButton.vue';
-import FilterBar from './FilterBar.vue';
-import MySelectButton from './MySelectButton.vue';
-import MyScroller from './MyScroller.vue';
+import { onMounted } from 'vue'
+import MyButton from './MyButton.vue'
+import FilterBar from './FilterBar.vue'
+import MySelectButton from './MySelectButton.vue'
+import MyScroller from './MyScroller.vue'
+import { useNoteStore } from '../stores/NoteStore'
 
+const noteStore = useNoteStore()
 
-
-
-// ref reactiu per guardar les notes
-const notes = ref({});
-
-async function fetchNotes() {
-  try {
-    const res = await fetch("http://localhost:8002/notes");
-    const data = await res.json();
-
-
-    notes.value = data; // guardem les notes tal com venen del backend
-
-  } catch (error) {
-    console.error("Error en carregar les notes: ", error);
-  }
-}
-
-// quan el component es munta, carreguem les notes
 onMounted(() => {
-  fetchNotes();
-});
-
-
-
-
-
-//VIRTUAL SCROLL 
+  noteStore.fetchNotes()
+})
 </script>
 
-
 <template>
-    <section id="note-list">
-        <div class="new-note flex">
-            <h2>Notes</h2>
-            <MyButton bg="white" color="var(--color-primary)" border="var(--border)" width="fit-content"><i
-                    class="fa fa-plus fa-sm"></i><span class="create"> Create New</span></MyButton>
-        </div>
+  <section id="note-list">
+    <div class="new-note flex">
+      <h2>Notes</h2>
+      <MyButton bg="white" color="var(--color-primary)" border="var(--border)" width="fit-content">
+        <i class="fa fa-plus fa-sm"></i><span class="create"> Create New</span>
+      </MyButton>
+    </div>
 
+    <div class="notes-info flex">
+      <p><span class="num-notes">{{ Object.keys(noteStore.notes).length }}</span> Notes</p>
+      <FilterBar />
+    </div>
 
-        <div class="notes-info flex">
-            <p><span class="num-notes">0</span> Notes</p>
-            <FilterBar />
+    <MySelectButton />
 
-        </div>
-        <MySelectButton />
-
-        <!--al haber un v-model eso indica que el hijo DEBE devolver algo (ya que las props son solo de lectura), en este caso las nnotas actualizadas que se actualizan cada vez que se hace click en la basura-->
-       <MyScroller v-model:notes="notes" />
-    </section>
-
+    <!-- ahora pasas las notas del store -->
+    <MyScroller :notes="noteStore.notes" />
+  </section>
 </template>
 
 
@@ -67,12 +42,10 @@ onMounted(() => {
     flex-direction: column;
     min-width: 0;
     max-width: 100%;
-    height: 100%;
+    height: 100%; /* Mantén 100% */
     color: black;
-    height: 100%;
-
+    overflow: hidden; /* Añade esto */
 }
-
 
 .new-note {
     border-bottom: var(--border);
@@ -80,6 +53,18 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    flex-shrink: 0; /* Evita que se comprima */
+}
+
+.notes-info {
+    justify-content: space-around;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-bottom: var(--border);
+    color: var(--color-secondary);
+    padding: 0.625rem;
+    flex-wrap: wrap;
+    flex-shrink: 0; /* Evita que se comprima */
 }
 
 *::-webkit-scrollbar {
@@ -94,16 +79,6 @@ h2 {
     margin: 0;
 }
 
-.notes-info {
-    justify-content: space-around;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    border-bottom: var(--border);
-    color: var(--color-secondary);
-    padding: 0.625rem;
-    flex-wrap: wrap;
-
-}
 
 .num-notes {
     color: var(--color-accent);

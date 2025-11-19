@@ -47,8 +47,7 @@ class Nota(BaseModel):
     link: str | None
     has_tasks: bool
     num_links: int
-    tags: Tag | None
-    num_tags: int
+    tags: list[Tag] | None
     time: str
     notebook: str
     has_alarm: bool

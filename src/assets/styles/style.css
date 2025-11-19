@@ -11,14 +11,14 @@
   --font-main: "DM Sans", sans-serif;
   --btn-padding: 0.500rem 1rem;
   --btn-radius: 0.625rem;
-  --p-selectbutton-border-radius: 0px;  	
+  --p-selectbutton-border-radius: 0px;
 }
 
 body {
   font-family: var(--font-main);
   height: 100vh;
   background-color: #fff;
-  
+
 }
 
 h1 {
@@ -36,8 +36,65 @@ h1 {
   color: var(--color-primary);
 }
 
-.active {
-  background-color: #2e84ed22;
-  border-left: 3px solid var(--color-primary) !important;
+
+.personal {
+  color: var(--color-personal-lbl);
+  background-color: var(--bg-personal-lbl);
 }
 
+.project {
+  color: var(--color-project-lbl);
+  background-color: var(--bg-project-lbl);
+}
+
+.other {
+  color: #0859bca0;
+  background-color: var(--color-primary);
+}
+
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.personal {
+  color: var(--color-personal-lbl);
+  background-color: var(--bg-personal-lbl);
+}
+
+.project {
+  color: var(--color-project-lbl);
+  background-color: var(--bg-project-lbl);
+}
+
+
+#notepanel,
+#note-list {
+  min-width: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  /* CRÍTICO */
+}
+
+#app {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-main);
+  height: 100vh;
+  background-color: #fff;
+  overflow: hidden;
+  /* Añade esto */
+}

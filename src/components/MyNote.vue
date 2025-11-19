@@ -1,92 +1,78 @@
 <script setup>
+import Image from 'primevue/image'
+import { computed } from 'vue'
+import { useNoteStore } from '../stores/NoteStore'
 
-
-import Image from 'primevue/image';
-import { ref, computed } from 'vue';
-
-
+const noteStore = useNoteStore()
 
 const props = defineProps({
-  noteId: {
-    type: String,
-    required: true
-  },
-  nota: {
-    type: Object,
-    required: true
-  }
-});
+  noteId: { type: String, required: true },
+  titol: String,
+  contingut: String,
+  images: Array,
+  hasTasks: Boolean,
+  tasksId: Array,
+  numLinks: Number,
+  tags: Array,
+  time: String,
+  notebook: String,
+  hasAlarm: Boolean,
+  isShared: Boolean
+})
 
 
-
-
-const emit= defineEmits(['onDeleteClicked'])
-const handleDeleteClick = () => {
-  emit('onDeleteClicked', props.noteId)
-}
-
-
-
-const hidden = ref(false);
-
+const isActive = computed(() => noteStore.selectedNoteId === props.noteId)
 
 
 const imageUrl = computed(() => {
-
-  if (props.nota.images && props.nota.images.length > 0) {
-    const imageName = props.nota.images[0];
-    const url = `/images/${imageName}`;
-    return url;
+  if (props.images && props.images.length > 0) {
+    return `/images/${props.images[0]}`
   }
-  return null;
-});
-
-console.log('Nota:', props.nota);
-console.log('Alarm:', props.nota.has_alarm);
-console.log('Has imatge:', props.nota.has_img);
-console.log('Imagtes array:', props.nota.images);
-console.log('Image URL:', imageUrl.value);
+  return null
+})
 </script>
 
+
 <template>
-
-
-  <article class="notas" :data-id="noteId" :class="{ active: nota.isActive, 'hasimg': imageUrl, 'noimg': !imageUrl }"
-    v-if="!hidden">
+  <article @click="noteStore.selectNote(noteId)"  class="nota" :data-id="noteId" :class="{ active: isActive, 'hasimg': imageUrl, 'noimg': !imageUrl }" >
     <div class="text-note">
       <div class="inner">
-        <i class="pi pi-trash delete-task" @click.prevent="handleDeleteClick"></i>
-        <h3 class="note-title">{{ nota.titol }}</h3>
-        <p class="note-preview">{{ nota.contingut.slice(0, 70) }}.</p>
+        <h3 class="note-title">{{ titol }}</h3>
+        <p class="note-preview">{{ contingut?.slice(0, 70) }}.</p>
 
-        <div class="details flex">
+        <div class="details">
           <div class="info-note flex">
-
-            <div v-if="nota.has_tasks" class="detail flex">
+            <div v-if="hasTasks" class="detail flex">
               <i class="fa-solid fa-list-check fa-sm text-secondary"></i>
-              <p class="task-num">{{ nota.num_tasks || 0 }}</p>
+              <p class="task-num">0/{{ tasksId.length }}</p>
             </div>
 
-
-            <div v-if="nota.num_links > 0" class="detail flex">
+            <div v-if="numLinks > 0" class="detail flex">
               <i class="fa-solid fa-link fa-sm text-secondary"></i>
-              <p class="link-num">{{ nota.num_links }}</p>
+              <p class="link-num">{{ numLinks }}</p>
             </div>
 
-
-            <div v-if="nota.tags" class="detail tag-detail flex">
+            <div v-if="tags" class="detail tag-detail flex" :class="tags[0].toLowerCase()">
               <i class="fa-solid fa-tag fa-sm"></i>
-              <p class="tag-name">{{ nota.tags }}</p>
+              <p class="tag-name">{{ tags[0] }}</p>
             </div>
+            <p v-if="tags && tags.length > 1" class="tag-amount">
+              + <span class="tag-num">{{ tags.length }}</span>
+            </p>
           </div>
 
           <div class="time-note flex">
             <div class="detail notebook-details flex">
-              <p class="time-detail">{{ nota.time }}</p>
+              <p class="time-detail">{{ time }}</p>
             </div>
             <div class="detail notebook-details flex">
               <i class="fa-solid fa-book fa-sm text-secondary"></i>
-              <p class="task-num">{{ nota.notebook }}</p>
+              <p class="task-num">{{ notebook }}</p>
+            </div>
+
+            <div class="detail extra-details flex">
+              <i v-if="isShared" class="fa-solid fa-users fa-sm text-primary"></i>
+              <i v-if="hasAlarm" class="fa-solid fa-alarm-clock fa-sm text-primary"></i>
             </div>
           </div>
         </div>
@@ -94,20 +80,33 @@ console.log('Image URL:', imageUrl.value);
     </div>
 
     <div class="img-preview">
-      <Image class="image" v-if="imageUrl" :src="imageUrl" :alt="nota.titol" preview />
+      <Image class="image" v-if="imageUrl" :src="imageUrl" :alt="titol" preview />
     </div>
 
     <div class="detail extra-details-bottom flex w100">
-      <p v-if="nota.has_tasks" class="task-num-bottom">{{ nota.num_tasks || 0 }}</p>
-      <p class="time-detail-bottom">{{ nota.time }}</p>
-
-      <i v-if="nota.has_alarm" class="fa-solid fa-bell fa-sm"></i>
+      <p v-if="hasTasks" class="task-num-bottom">{{ numTasks || 0 }}</p>
+      <p class="time-detail-bottom">{{ time }}</p>
+      <i v-if="hasAlarm" class="fa-solid fa-bell fa-sm"></i>
     </div>
+
+    <i class="pi pi-trash delete-task" @click="noteStore.deleteNote(noteId)"></i>
   </article>
 </template>
 
 
+
 <style scoped>
+
+.nota:not(.active):hover  {
+  background-color: var(--color-bg-light);
+  cursor: pointer;
+}
+
+.active {
+  background-color: #2e84ed22;
+  border-left: 3px solid var(--color-primary) !important;
+}
+
 .flex {
   flex-wrap: wrap;
 }
@@ -120,19 +119,23 @@ console.log('Image URL:', imageUrl.value);
   max-width: 100%;
 }
 
+.note-title {
+  color: var(--color-accent);
+  font-size: 1.15625rem;
+  margin: 0px 0px 0.625rem 0px;
+}
 
-
-.details p {
-  margin: 5px;
+.note-preview {
+  color: var(--color-secondary);
+  font-size: 1.09375rem;
 }
 
 article.hasimg {
   width: 100%;
   display: grid;
   grid-template-columns: 70% 30%;
+  padding: 0px 10px;
 }
-
-
 
 .p-image {
   width: 100px;
@@ -152,10 +155,7 @@ article.hasimg {
 
 .img-preview {
   display: flex;
-}
-
-.delete-task {
-  margin: 5px;
+  justify-content: flex-end;
 }
 
 .inner-noimg {
@@ -167,9 +167,45 @@ article.hasimg {
 }
 
 
-.extra-details-bottom {
-  display: none;
+
+.details,
+.time {
+  flex-wrap: wrap;
+}
+
+.detail {
+  margin: 0.5rem 1rem 0.3125rem 0;
+}
+
+.detail p {
+  font-size: 0.96875rem;
+  color: #575757;
+  margin-left: 0.3125rem;
+}
+
+.tag-detail {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.9375rem;
+  
+}
+
+p.time-detail {
+  margin-left: 0px;
+}
+
+.extra-details .fa-sm {
+  margin-right: 0.625rem;
 }
 
 
+
+
+.delete-task {
+  margin: 5px;
+}
+
+
+.extra-details-bottom {
+  display: none;
+}
 </style>

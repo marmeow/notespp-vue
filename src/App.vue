@@ -20,22 +20,13 @@ import NotePanel from "./components/NotePanel.vue";
 
 <style scoped>
 #grid {
-  height: 100%;
+  height: 100vh; /* Cambia de 100% a 100vh */
   display: grid;
-    grid-template-columns: 70px 250px 450px auto;
-    grid-template-rows: 70px auto;
+  grid-template-columns: 70px 250px 450px auto;
+  grid-template-rows: 70px auto;
   grid-template-areas:
     "first-sidebar header header header"
     "first-sidebar second-sidebar note-list notepanel";
-}
-
-
-.notelist {
-  grid-area: notelist;
-}
-
-
-.notepanel {
-  grid-area: notepanel;
+  overflow: hidden; /* Añade esto */
 }
 </style>
