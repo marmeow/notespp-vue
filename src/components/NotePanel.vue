@@ -6,19 +6,22 @@ import { useNoteStore } from '../stores/NoteStore'
 import { computed } from 'vue'
 
 const noteStore = useNoteStore()
-const nota = computed(() => noteStore.selectedNote) // computed pq es reactiva
+const nota = computed(() => noteStore.notesWithTasks) // solo las tasks correctas
+
+
 
 </script>
 
 <template>
     <section id="notepanel">
-
         <MyToolBar />
         <section class="notebook" id="notebook">
             <div v-if="nota">
-                 <h2 class="note-title">{{ nota.titol }}</h2>
+                <h2 class="note-title">{{ nota.titol }}</h2>
                 <p>{{ nota.contingut }}</p>
-                <MyTask />
+                <MyTask v-for="task in nota.tasks" :key="task.id" :task-id="task.id" :titol="task.titol"
+                    :is-done="task.is_done" :deadline="task.deadline_formatted" :reminder="task.reminder_formatted"
+                    :tipus="task.tipus" />
             </div>
             <div v-else>
                 <p>Pick a note</p>
@@ -28,7 +31,6 @@ const nota = computed(() => noteStore.selectedNote) // computed pq es reactiva
 </template>
 
 <style scoped>
-/* Usa #notepanel si es id, o .notepanel si es class */
 #notepanel {
     grid-area: notepanel;
     height: 100%;
@@ -38,6 +40,7 @@ const nota = computed(() => noteStore.selectedNote) // computed pq es reactiva
     display: flex;
     background-color: white;
     overflow: hidden;
+    color: black;
 }
 
 .notebook {
@@ -107,7 +110,4 @@ const nota = computed(() => noteStore.selectedNote) // computed pq es reactiva
     margin: 0;
     font-size: 1.875rem;
 }
-
-
-
 </style>

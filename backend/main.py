@@ -1,11 +1,12 @@
 # uvicorn main:app --reload  # noqa: INP001
 
-from typing import Annotated
 
-from data import note_dict
-from fastapi import Body, FastAPI
+from typing import List
+
+from data import note_dict, task_dict
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models import Nota, Task, TaskUpdate
+from models import Nota
 
 app = FastAPI()
 app.add_middleware(
@@ -27,42 +28,18 @@ async def get_note(note_id: int) -> Nota | None:
     return note_dict.get(note_id)
 
 
-@app.patch("/notes/{note_id}/tasks/{task_id}")
-async def update_task(
-    note_id: int, task_id: int, update: Annotated[TaskUpdate, Body()]
-) -> Task | None:
-    nota = note_dict.get(note_id)
-    if nota and task_id in nota.tasks:
-        task = nota.tasks[task_id]
-        if update.is_done is not None:
-            task.is_done = update.is_done
-        if update.is_selected is not None:
-            task.is_selected = update.is_selected
-        return task
+@app.get("/notes/{note_id}/tasks")
+def get_tasks_for_note(note_id: int) -> List[dict]:
+    note = note_dict.get(note_id)
+    if not note:
+        return []
 
-    return None
+    result = []
+    for taskid in note.tasks_id:
+        if taskid in task_dict:
+            task = task_dict[taskid]
+            task_data = task.model_dump()  # para que sea un dict
+            task_data['id'] = taskid  # Usar la key del diccionario como id
+            result.append(task_data)
 
-
-@app.post("/notes/{note_id}/tasks/")
-async def create_task(note_id: int, task_data: Task) -> dict | None:
-    nota = note_dict.get(note_id)
-    if not nota:
-        return None
-
-    new_id = max(nota.tasks.keys(), default=0) + 1
-    nota.tasks[new_id] = task_data
-    nota.tasks_id.append(new_id)
-    nota.has_tasks = True
-
-    return {"task_id": new_id, "task": task_data}
-
-
-@app.delete("/notes/{note_id}/tasks/{task_id}")
-async def delete_task(note_id: int, task_id: int) -> dict | None:
-    nota = note_dict.get(note_id)
-    if nota and task_id in nota.tasks:
-        del nota.tasks[task_id]
-        nota.tasks_id.remove(task_id)
-        nota.has_tasks = bool(nota.tasks_id)
-        return {"deleted": True, "task_id": task_id}
-    return {"deleted": False}
+    return result

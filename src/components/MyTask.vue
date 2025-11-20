@@ -1,33 +1,61 @@
-<script setup></script>
+<script setup>
+const props = defineProps({
+    taskId: {
+        type: Number,
+        required: true
+    },
+    titol: {
+        type: String,
+        required: true
+    },
+    isDone: {
+        type: Boolean,
+        required: true
+    },
+    deadline: {
+        type: String,
+        default: null
+    },
+    reminder: {
+        type: String,
+        default: null
+    },
+    tipus: {
+        type: String,
+    }
+})
+
+</script>
 
 <template>
+    <div class="task-wrapper ">
+        <i class="icono bi bi-grip-vertical"></i>
+        <div class="task-nota">
+            <div class="task-title flex">
+                <label class="check" :class="tipus.toLowerCase() + '-check'">
+                    <input type="checkbox" :data-task-id="taskId" />
+                    <span class="checkmark"></span>
+                    {{ titol }}
+                </label>
 
-     <div class="task-wrapper">
-          <i class="icono bi bi-grip-vertical"></i>
-          <div class="task-nota">
-          <div class="task-title flex">
-            <label class="check ">
-              <input type="checkbox" 
-                data-task-id="2"
-                data-note-id="2">
-              <span class="checkmark"></span>
-      
-            </label>
-           </div>
-            <div class="deadline-info flex">
-              <div class="date-stuff flex">
-           meow
-              </div>
-       
             </div>
-          </div>
-        </div>
+            <div class="deadline-info flex">
+                <div class="flex">
+                    <div class="flex" v-if="deadline"><i class="fa-solid fa-flag-checkered fa-sm text-secondary"></i>
+                        <p class="deadline">Deadline <span class="date-deadline">{{ deadline }}</span></p>
+                    </div>
+                    <div class="flex alarm" v-if="reminder"><i class="fa-solid fa-alarm-clock fa-sm text-secondary"></i>
+                        <p class="alarm-day">{{ reminder }}</p>
+                    </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
+
 <style scoped>
-
-
 /* CHECKBOXES */
 .check {
     display: block;
@@ -207,7 +235,4 @@
     background-color: white;
     margin-left: 1.25rem;
 }
-
-
-
 </style>

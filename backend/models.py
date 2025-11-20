@@ -13,7 +13,6 @@ class Tag(StrEnum):
 
 class TaskUpdate(BaseModel):
     is_done: Optional[bool] = None  # noqa: UP045
-    is_selected: Optional[bool] = None  # noqa: UP045
 
 
 class Task(BaseModel):
@@ -22,7 +21,6 @@ class Task(BaseModel):
     tipus: str | None
     deadline: datetime | None
     reminder: datetime | None
-    is_selected: bool
 
     @computed_field(return_type=str | None)
     @property
@@ -45,14 +43,12 @@ class Nota(BaseModel):
     titol: str
     contingut: str
     link: str | None
-    has_tasks: bool
     num_links: int
     tags: list[Tag] | None
     time: str
     notebook: str
     has_alarm: bool
     is_shared: bool
-    tasks: dict[int, Task]
     tasks_id: list[int]
     last_edit: str
     images: list[str] | None
