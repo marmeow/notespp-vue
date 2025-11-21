@@ -1,8 +1,13 @@
 <script setup>
+import { useNoteStore } from '../stores/NoteStore'
+
 const props = defineProps({
     taskId: {
         type: Number,
         required: true
+    },
+    noteId: {
+        type: Number,
     },
     titol: {
         type: String,
@@ -25,15 +30,24 @@ const props = defineProps({
     }
 })
 
+const noteStore = useNoteStore()
+
+
+
+const toggleTask = async (event) => {
+    const newValue = event.target.checked
+    // Necesitas pasar el noteId también
+    await noteStore.updateTask(noteStore.selectedNoteId, props.taskId, newValue)
+}
 </script>
 
 <template>
     <div class="task-wrapper ">
         <i class="icono bi bi-grip-vertical"></i>
-        <div class="task-nota">
+        <div class="task-nota" :data-task-id="taskId">
             <div class="task-title flex">
                 <label class="check" :class="tipus.toLowerCase() + '-check'">
-                    <input type="checkbox" :data-task-id="taskId" />
+                    <input type="checkbox" :checked="isDone" @change="toggleTask" />
                     <span class="checkmark"></span>
                     {{ titol }}
                 </label>
@@ -56,7 +70,6 @@ const props = defineProps({
 
 
 <style scoped>
-/* CHECKBOXES */
 .check {
     display: block;
     position: relative;

@@ -5,6 +5,7 @@ const props = defineProps({
   notes: { type: Object, default: () => ({}) }
 })
 
+import { useNoteStore } from '../stores/NoteStore'
 
 </script>
 
@@ -17,7 +18,6 @@ const props = defineProps({
       :titol="nota.titol"
       :contingut="nota.contingut"
       :images="nota.images"
-      :has-tasks="nota.has_tasks"
       :tasks-id="nota.tasks_id"
       :num-links="nota.num_links"
       :tags="nota.tags"

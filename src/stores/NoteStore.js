@@ -27,8 +27,8 @@ export const useNoteStore = defineStore('noteStore', {
     actions: {
         async fetchNotes() {
             const res = await fetch("http://localhost:8002/notes")
-            const data = await res.json()
-            this.notes = data
+            const nota = await res.json()
+            this.notes = nota
         },
         deleteNote(noteId) {
             this.notes = Object.fromEntries(
@@ -37,12 +37,36 @@ export const useNoteStore = defineStore('noteStore', {
         },
         async selectNote(id) {
             this.selectedNoteId = id
-            await this.fetchTasksForNote(id)  // Agregar esta línea
+            await this.fetchTasksForNote(id)
         },
         async fetchTasksForNote(noteId) {
             const res = await fetch(`http://localhost:8002/notes/${noteId}/tasks`)
-            const data = await res.json()
-            this.tasksNota[noteId] = data
+            const task = await res.json()
+            this.tasksNota[noteId] = task
+        },
+        async fetchAllTasks() {
+            const noteIds = Object.keys(this.notes)
+            await Promise.all(
+                noteIds.map(id => this.fetchTasksForNote(id))
+            )
+        },
+        async updateTask(noteId, taskId, isDone) {
+            const res = await fetch(`http://localhost:8002/notes/${noteId}/tasks/${taskId}`, {
+                method: "PATCH", // Usa PATCH en lugar de PUT
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ is_done: isDone }),
+            })
+
+            const tasks = this.tasksNota[noteId] || []
+            this.tasksNota[noteId] = tasks.map(task =>
+                task.id === taskId ? { ...task, is_done: isDone } : task
+            )
         }
+
+
+
+
     }
 })

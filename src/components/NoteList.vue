@@ -8,8 +8,9 @@ import { useNoteStore } from '../stores/NoteStore'
 
 const noteStore = useNoteStore()
 
-onMounted(() => {
-  noteStore.fetchNotes()
+onMounted(async () => {
+  await noteStore.fetchNotes()
+  await noteStore.fetchAllTasks() 
 })
 </script>
 
@@ -28,8 +29,6 @@ onMounted(() => {
     </div>
 
     <MySelectButton />
-
-    <!-- ahora pasas las notas del store -->
     <MyScroller :notes="noteStore.notes" />
   </section>
 </template>

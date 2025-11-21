@@ -30,11 +30,23 @@ const imageUrl = computed(() => {
   }
   return null
 })
+
+const completedTasks = computed(() => {
+  const tasks = noteStore.tasksNota[props.noteId] || []
+  return tasks.filter(t => t.is_done).length
+})
+
+
+
+
+
+
 </script>
 
 
 <template>
-  <article @click="noteStore.selectNote(noteId)"  class="nota" :data-id="noteId" :class="{ active: isActive, 'hasimg': imageUrl, 'noimg': !imageUrl }" >
+  <article @click="noteStore.selectNote(noteId)" class="nota" :data-id="noteId"
+    :class="{ active: isActive, 'hasimg': imageUrl, 'noimg': !imageUrl }">
     <div class="text-note">
       <div class="inner">
         <h3 class="note-title">{{ titol }}</h3>
@@ -42,10 +54,11 @@ const imageUrl = computed(() => {
 
         <div class="details">
           <div class="info-note flex">
-            <div v-if="hasTasks" class="detail flex">
+            <div v-if="tasksId.length > 0" class="detail flex">
               <i class="fa-solid fa-list-check fa-sm text-secondary"></i>
-              <p class="task-num">0/{{ tasksId.length }}</p>
+              <p class="task-num">{{ completedTasks }}/{{ tasksId.length }}</p>
             </div>
+
 
             <div v-if="numLinks > 0" class="detail flex">
               <i class="fa-solid fa-link fa-sm text-secondary"></i>
@@ -84,7 +97,7 @@ const imageUrl = computed(() => {
     </div>
 
     <div class="detail extra-details-bottom flex w100">
-      <p v-if="hasTasks" class="task-num-bottom">{{ numTasks || 0 }}</p>
+      <p v-if="hasTasks" class="task-num-bottom">{{ numTasks }}</p>
       <p class="time-detail-bottom">{{ time }}</p>
       <i v-if="hasAlarm" class="fa-solid fa-bell fa-sm"></i>
     </div>
@@ -96,8 +109,7 @@ const imageUrl = computed(() => {
 
 
 <style scoped>
-
-.nota:not(.active):hover  {
+.nota:not(.active):hover {
   background-color: var(--color-bg-light);
   cursor: pointer;
 }
@@ -186,7 +198,7 @@ article.hasimg {
 .tag-detail {
   padding: 0.25rem 0.5rem;
   border-radius: 0.9375rem;
-  
+
 }
 
 p.time-detail {
